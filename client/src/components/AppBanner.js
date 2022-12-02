@@ -14,6 +14,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { Icon } from '@mui/material';
+import { red } from '@mui/material/colors';
 
 export default function AppBanner() {
     const { auth } = useContext(AuthContext);
@@ -96,19 +97,19 @@ export default function AppBanner() {
         else
             return <AccountCircle />;
     }
-
+    //background-color: red; /* For browsers that do not support gradients */
+    //background-image: linear-gradient(to bottom right, red, yellow);
     return (
         <Box sx={{ flexGrow: 1 }}>
-            <AppBar position="static">
+            <AppBar position="static" style={{ backgroundColor: 'red', backgroundImage: 'linear-gradient(to bottom right, red, yellow)'}}>    
                 <Toolbar>
                     <Typography                        
                         variant="h4"
                         noWrap
                         component="div"
-                        sx={{ display: { xs: 'none', sm: 'block' } }}                        
+                        sx={{ display: { xs: 'none', sm: 'block' } }}
                     >
                         <IconButton onClick={homeIconButton} style={{ textDecoration: 'none', color: 'white' } }>⌂</IconButton>
-
                     </Typography>
                     <Box sx={{ flexGrow: 1 }}>{editToolbar}</Box>
                     <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
