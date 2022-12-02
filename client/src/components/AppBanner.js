@@ -13,8 +13,6 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import { Icon } from '@mui/material';
-import { red } from '@mui/material/colors';
 
 export default function AppBanner() {
     const { auth } = useContext(AuthContext);
