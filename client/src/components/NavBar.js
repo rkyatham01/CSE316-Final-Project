@@ -7,12 +7,14 @@ import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
 import SearchBar from './SearchBar';
+import SelectComp from './SelectComp';
+import Grid from '@mui/material/Grid';
 
 const useStyles = makeStyles({
     navBarStyle: {
         backgroundColor: 'lightblue',
         width: "100%",
-    }
+    },
 
 });
 
@@ -29,37 +31,50 @@ const Navbar = () => {
   };
 
   return (
-    <AppBar position="static" className={classes.navBarStyle}
-    >
-      <Toolbar
-      >
-        <IconButton
-          edge="start"
-          color="inherit"
-          aria-label="home"
-        >
-        <HomeOutlinedIcon/>
-        </IconButton>
+    <AppBar position="static" className={classes.navBarStyle}>
+        
+        <Grid>
+          <Toolbar>
+          <Grid item xs={3}>
+            <IconButton
+              edge="start"
+              color="inherit"
+              aria-label="home"
+            >
+            <HomeOutlinedIcon/>
+            </IconButton>
 
-        <IconButton
-          edge="start"
-          color="inherit"
-          aria-label="groupPeople"
-        >
-        <GroupsOutlinedIcon/>
-        </IconButton>
+            <IconButton
+              edge="start"
+              color="inherit"
+              aria-label="groupPeople"
+            >
+            <GroupsOutlinedIcon/>
+            </IconButton>
 
-        <IconButton
-          edge="start"
-          color="inherit"
-          aria-label="groupPeople"
-        >
-        <PersonOutlinedIcon/>
-        </IconButton>
+            <IconButton
+              edge="start"
+              color="inherit"
+              aria-label="groupPeople"
+            >
+            <PersonOutlinedIcon/>
+            </IconButton>
+          </Grid>
 
-        <SearchBar></SearchBar>
+          <Grid item xs={6}>
+            <SearchBar></SearchBar>
+          </Grid>
 
-      </Toolbar>
+          <Grid item xs={0.8}>
+            Sort By: 
+          </Grid>
+
+          <Grid item xs={2.2}>
+            <SelectComp></SelectComp>
+          </Grid>
+
+          </Toolbar>
+        </Grid>
     </AppBar>
   );
 };
