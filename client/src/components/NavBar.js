@@ -1,20 +1,17 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { AppBar } from '@mui/material';
-import { Button } from '@mui/material';
 import { IconButton } from '@mui/material';
 import { makeStyles } from "@mui/styles";
 import { Toolbar } from '@mui/material';
-import { Typography } from '@mui/material';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
-import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined'
-import { red } from '@mui/material/colors';
-import { height } from '@mui/system';
+import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
+import SearchBar from './SearchBar';
 
 const useStyles = makeStyles({
     navBarStyle: {
-        background: red,
-        height:50
+        backgroundColor: 'lightblue',
+        width: "100%",
     }
 
 });
@@ -32,8 +29,10 @@ const Navbar = () => {
   };
 
   return (
-    <AppBar position="static" className={classes.navBarStyle}>
-      <Toolbar>
+    <AppBar position="static" className={classes.navBarStyle}
+    >
+      <Toolbar
+      >
         <IconButton
           edge="start"
           color="inherit"
@@ -57,6 +56,8 @@ const Navbar = () => {
         >
         <PersonOutlinedIcon/>
         </IconButton>
+
+        <SearchBar></SearchBar>
 
       </Toolbar>
     </AppBar>

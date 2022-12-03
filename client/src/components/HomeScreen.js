@@ -1,15 +1,13 @@
 import React, { useContext, useEffect } from 'react'
 import { GlobalStoreContext } from '../store'
 import ListCard from './ListCard.js'
-import MUIDeleteModal from './MUIDeleteModal'
 import Box from '@mui/material/Box'
-import AddIcon from '@mui/icons-material/Add';
 import List from '@mui/material/List';
-import Typography from '@mui/material/Typography'
 import { makeStyles } from "@mui/styles";
-import Paper from "@mui/material/Paper"
 import Grid from "@mui/material/Grid"
 import NavBar from './NavBar'
+import { useState } from "react";
+
 /*
     This React component lists all the top5 lists in the UI.
     
@@ -19,8 +17,7 @@ import NavBar from './NavBar'
 const useStyles = makeStyles({ //could create styles here and insert them into main function 
     OuterBox: {
         overflow: "auto",
-        width: '96.8%',
-        left: '1.6%',
+        width: '100',
     },
 
     OuterDiv: {
@@ -28,10 +25,17 @@ const useStyles = makeStyles({ //could create styles here and insert them into m
     }
 });
 
+const filterData = (query, data) => { //filters data
+    // filter data that the search goes thru
+  };
+
 
 const HomeScreen = () => {
     const { store } = useContext(GlobalStoreContext);
     const classes = useStyles() //to use the styles within the component (invoking the hook)
+    const [searchQuery, setSearchQuery] = useState(""); //to import the searchQuery
+    let data = []
+    const dataFiltered = filterData(searchQuery, data);
 
     useEffect(() => {
         store.loadIdNamePairs();
@@ -65,11 +69,7 @@ const HomeScreen = () => {
             
             <Grid container spacing={1}>
 
-                <Grid item xs={12}>
-                    <div>
-                    <NavBar></NavBar>
-                    </div>
-                </Grid>
+               <NavBar></NavBar>
 
                 <Grid item xs={6}>
                     <div>
@@ -90,26 +90,3 @@ const HomeScreen = () => {
         )
 }
 export default HomeScreen
-
-//     <div id="splash-screen">
-//         <Typography //typography is used for text custom css
-//             className={classes.playlistStyle} //gonna apply properties
-//             variant="h2"
-//         >
-// /* <div id="list-selector-list">
-// {
-//     listCard
-// }
-// <MUIDeleteModal />
-// </div> */ 
-// // { <div id="list-selector-heading">
-// // <Fab 
-//     color="primary" 
-//     aria-label="add"
-//     id="add-list-button"
-//     onClick={handleCreateNewList}
-// >
-//     <AddIcon />
-// </Fab>
-//    <Typography variant="h2">Your Lists</Typography>
-// </div>

@@ -54,8 +54,8 @@ body {
   border-radius: 10px;
 }
 #splash-screen {
-  background-color: red; /* For browsers that do not support gradients */
-  background-image: linear-gradient(to bottom right, rgb(246, 77, 35), yellow);
+  background-color: rgb(25, 216, 22); /* For browsers that do not support gradients */
+  background-image: linear-gradient(to bottom right, #f2ffff, #FFDEA8);
   font-size: 5vw;
   border-color: #ffffff;
   border-width: 2px;

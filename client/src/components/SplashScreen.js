@@ -36,7 +36,7 @@ const useStyles = makeStyles({ //could create styles here and insert them into m
         border: "solid 3px black",
         borderWidth: 1,
         width: 300,
-        background: "#ff8c00"
+        background: "palegoldenrod"
     },
 
     registerButton: {
@@ -45,14 +45,14 @@ const useStyles = makeStyles({ //could create styles here and insert them into m
         border: "solid 3px black",
         borderWidth: 1,
         width: 300,
-        background: "#ff8c00"
+        background: "palegoldenrod"
     },
 
     guestLogin: {
         fontSize: 22,
         color: "#300000",
         border: "solid 5px black",
-        background: "#ff8c00",
+        background: "palegoldenrod",
         borderWidth: 1,
         width: 300,
         marginTop:7

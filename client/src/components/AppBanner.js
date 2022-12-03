@@ -2,9 +2,7 @@ import { useContext, useState } from 'react';
 import { Link } from 'react-router-dom'
 import AuthContext from '../auth';
 import { GlobalStoreContext } from '../store'
-
 import EditToolbar from './EditToolbar'
-
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -13,6 +11,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+import { Paper } from '@mui/material';
 
 export default function AppBanner() {
     const { auth } = useContext(AuthContext);
@@ -99,7 +98,8 @@ export default function AppBanner() {
     //background-image: linear-gradient(to bottom right, red, yellow);
     return (
         <Box sx={{ flexGrow: 1 }}>
-            <AppBar position="static" style={{ backgroundColor: 'red', backgroundImage: 'linear-gradient(to bottom right, red, yellow)'}}>    
+
+            <AppBar position="static" style={{ backgroundColor: 'blue', backgroundImage: 'linear-gradient(to bottom right,  #F0E69D, #FAFAD2)'}}>    
                 <Toolbar>
                     <Typography                        
                         variant="h4"
@@ -107,7 +107,8 @@ export default function AppBanner() {
                         component="div"
                         sx={{ display: { xs: 'none', sm: 'block' } }}
                     >
-                        <IconButton onClick={homeIconButton} style={{ textDecoration: 'none', color: 'white' } }>⌂</IconButton>
+                        <img src="/playlistlogo.png" id="no-background" style={{height: "10%", width: "17%"}} />
+                        {/* <IconButton onClick={homeIconButton} style={{ textDecoration: 'none', color: 'goldenrod' } }><img src="../"></img></IconButton> */}
                     </Typography>
                     <Box sx={{ flexGrow: 1 }}>{editToolbar}</Box>
                     <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
@@ -119,6 +120,7 @@ export default function AppBanner() {
                             aria-haspopup="true"
                             onClick={handleProfileMenuOpen}
                             color="inherit"
+                            style= {{color: 'goldenrod'}}
                         >
                             { getAccountMenu(auth.loggedIn) }
                         </IconButton>
