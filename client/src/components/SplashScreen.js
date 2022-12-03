@@ -6,7 +6,6 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import { useContext, useState } from 'react';
 import { GlobalStoreContext } from '../store'
-import { useHistory } from "react-router-dom";
 
 const HeadToRegister = () => {
     window.location.href = '/register/';
@@ -72,7 +71,6 @@ export default function SplashScreen() {
     const { store } = useContext(GlobalStoreContext);
     const classes = useStyles() //to use the styles within the component (invoking the hook)
     //returns object with all the styles on it
-    const history = useHistory()
 
     return (
         <div id="splash-screen">
