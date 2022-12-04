@@ -7,6 +7,12 @@ import { makeStyles } from "@mui/styles";
 import Grid from "@mui/material/Grid"
 import NavBar from './NavBar'
 import { useState } from "react";
+import AuthContext from '../auth';
+import MUIDeleteModal from './MUIDeleteModal'
+import AddIcon from '@mui/icons-material/Add';
+import { Fab, Paper } from '@mui/material';
+import Typography from '@mui/material/Typography'
+/*
 
 /*
     This React component lists all the top5 lists in the UI.
@@ -16,7 +22,6 @@ import { useState } from "react";
 
 const useStyles = makeStyles({ //could create styles here and insert them into main function 
     OuterBox: {
-        overflow: "auto",
         width: '100',
     },
 
@@ -29,17 +34,28 @@ const filterData = (query, data) => { //filters data
     // filter data that the search goes thru
   };
 
+const newStyle = {
+    width: 35,
+    height: 10  
+}
 
 const HomeScreen = () => {
     const { store } = useContext(GlobalStoreContext);
+    const { auth } = useContext(AuthContext);
     const classes = useStyles() //to use the styles within the component (invoking the hook)
-    const [searchQuery, setSearchQuery] = useState(""); //to import the searchQuery
+    //const [searchQuery, setSearchQuery] = useState(""); //to import the searchQuery
     let data = []
-    const dataFiltered = filterData(searchQuery, data);
+    //const dataFiltered = filterData(searchQuery, data);
 
     useEffect(() => {
         store.loadIdNamePairs();
     }, []);
+
+    // let usersLists = []
+    // if (auth.user){
+    //     //Home Screen should only contain the signed in user's lists
+    //     usersLists = store.lists.filter(list => list.owner == auth.user.username);
+    // }
 
     function handleCreateNewList() {
         store.createNewList();
@@ -47,7 +63,7 @@ const HomeScreen = () => {
     let listCard = "";
     if (store) {
         listCard = 
-            <List sx={{ width: '90%', left: '5%', bgcolor: 'background.paper' }}>
+            <List sx={{ width: '100%', left: '0%' }}>
             {
                 store.idNamePairs.map((pair) => (
                     <ListCard
@@ -67,13 +83,20 @@ const HomeScreen = () => {
             className={classes.OuterDiv}
         >
             
-            <Grid container spacing={1}>
-
-               <NavBar></NavBar>
+            <Grid container>
+                <Grid item xs={12}>
+                <NavBar></NavBar>
+               </Grid>
 
                 <Grid item xs={6}>
-                    <div>
-                        Yo
+                    <div id="playlist-selector">
+
+                    <div id="list-selector-list">
+                        {
+                            listCard
+                        }
+                        <MUIDeleteModal />
+                    </div>
                     </div>
                 </Grid>
 
@@ -82,11 +105,27 @@ const HomeScreen = () => {
                         Yo2
                     </div>
                 </Grid>
-                
-            </Grid>
 
+                <Grid item xs={5}></Grid>
+                <Grid item xs={2}>
+                <div id="list-selector-heading">
+                    <Fab
+                        style={newStyle}
+                        color="primary" 
+                        aria-label="add"
+                        onClick={handleCreateNewList}
+                    >
+                        <AddIcon />
+                    </Fab>
+                        <Typography style={{fontSize: 25 }}
+                         variant="h2">Your Lists</Typography>
+                    </div>
+                </Grid>
+                <Grid item xs={5}></Grid>
+            </Grid>
         </div>
         </Box>
+        
         )
 }
 export default HomeScreen
