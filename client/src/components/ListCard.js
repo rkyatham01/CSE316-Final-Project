@@ -6,6 +6,15 @@ import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
 import ListItem from '@mui/material/ListItem';
 import TextField from '@mui/material/TextField';
+import { makeStyles } from "@mui/styles";
+import { border, height } from '@mui/system';
+import { lightBlue } from '@mui/material/colors';
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import ThumbDownIcon from '@mui/icons-material/ThumbDown';
+import React from 'react';
+import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
+import { List } from '@mui/material';
+import SongCard from './SongCard';
 
 /*
     This is a card in our list of top 5 lists. It lets select
@@ -14,11 +23,40 @@ import TextField from '@mui/material/TextField';
     
     @author McKilla Gorilla
 */
+
+const useStyles = makeStyles({ //could create styles here and insert them into main function 
+    ListCardCss: {
+        border: "1px solid black", 
+        borderRadius: "1px",
+        backgroundColor: lightBlue,
+        height: "25%",
+        width: "100%",
+        fontsize: "28pt", 
+        marginLeft: "5%",
+        marginBottom: "2%",
+        background: 'linear-gradient(to bottom right,  #F0E69D, #FAFAD2)'
+    },
+    
+    ListCardCss2: {
+        border: "1px solid black", 
+        borderRadius: "1px",
+        backgroundColor: lightBlue,
+        height: "40%",
+        width: "100%",
+        fontsize: "28pt", 
+        marginLeft: "5%",
+        marginBottom: "2%",
+        background: 'linear-gradient(to bottom right,  #F0E69D, #FAFAD2)'
+    }
+});
+
 function ListCard(props) {
     const { store } = useContext(GlobalStoreContext);
     const [editActive, setEditActive] = useState(false);
     const [text, setText] = useState("");
+    const [validOrNot, setter] = useState(false);
     const { idNamePair, selected } = props;
+    const classes = useStyles() //to use the styles within the component (invoking the hook)
 
     function handleLoadList(event, id) {
         console.log("handleLoadList for " + id);
@@ -73,28 +111,72 @@ function ListCard(props) {
     if (store.isListNameEditActive) {
         cardStatus = true;
     }
+
     let cardElement =
-        <ListItem
+        <ListItem 
+            className = {validOrNot ? classes.ListCardCss2 : classes.ListCardCss}
             id={idNamePair._id}
             key={idNamePair._id}
             sx={{ marginTop: '0px', display: 'flex', p: 1 }}
-            style={{ width: '100%', fontSize: '25pt' }}
+            style={{ width: '90%', fontSize: '15pt'}}
             button
-            onClick={(event) => {
-                handleLoadList(event, idNamePair._id)
-            }}
+            // onClick={(event) => {
+            //     handleLoadList(event, idNamePair._id)
+            // }}
         >
             <Box sx={{ p: 1, flexGrow: 1 }}>{idNamePair.name}</Box>
+
+            <Box >
+                <IconButton>
+                <ThumbUpIcon></ThumbUpIcon>
+                </IconButton>
+            </Box>
+
+
+            <Box >
+                <IconButton>
+                <ThumbDownIcon></ThumbDownIcon>
+                </IconButton>
+            </Box>
+
+            <Box id='change-playlist-cards'>
+                <List 
+                    sx={{ width: '100%', bgcolor: 'background.paper' }}
+                >
+                    {
+                        store.currentList.songs.map((song, index) => (
+                            <SongCard
+                                id={'playlist-song-' + (index)}
+                                key={'playlist-song-' + (index)}
+                                index={index}
+                                song={song}
+                            />
+                        ))  
+                    }
+                </List>  
+            </Box>
+
+            <Box >
+                <IconButton
+                onClick={(event) => {
+                    // handleLoadList(event, idNamePair._id) //changes to the respective playlist
+                    setter(true) //setter is function that sets variable or boolean (UseState)
+                }}
+                >
+                <KeyboardDoubleArrowDownIcon></KeyboardDoubleArrowDownIcon>
+                </IconButton>
+            </Box>
+
             <Box sx={{ p: 1 }}>
                 <IconButton onClick={handleToggleEdit} aria-label='edit'>
-                    <EditIcon style={{fontSize:'25pt'}} />
+                    <EditIcon style={{fontSize:'15pt'}} />
                 </IconButton>
             </Box>
             <Box sx={{ p: 1 }}>
                 <IconButton onClick={(event) => {
                         handleDeleteList(event, idNamePair._id)
                     }} aria-label='delete'>
-                    <DeleteIcon style={{fontSize:'25pt'}} />
+                    <DeleteIcon style={{fontSize:'15pt'}} />
                 </IconButton>
             </Box>
         </ListItem>
@@ -124,3 +206,22 @@ function ListCard(props) {
 }
 
 export default ListCard;
+
+{/* <Box id='change-playlist-cards'>
+<List 
+    sx={{ width: '100%', bgcolor: 'background.paper' }}
+>
+    {
+        store.currentList.songs.map((song, index) => (
+            <SongCard
+                id={'playlist-song-' + (index)}
+                key={'playlist-song-' + (index)}
+                index={index}
+                song={song}
+            />
+        ))  
+    }
+ </List>  
+
+ { modalJSX }
+ </Box> */}

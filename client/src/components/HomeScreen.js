@@ -24,10 +24,6 @@ const useStyles = makeStyles({ //could create styles here and insert them into m
     OuterBox: {
         width: '100',
     },
-
-    OuterDiv: {
-
-    }
 });
 
 const filterData = (query, data) => { //filters data
@@ -111,7 +107,7 @@ const HomeScreen = () => {
                 <div id="list-selector-heading">
                     <Fab
                         style={newStyle}
-                        color="primary" 
+                        color="white" 
                         aria-label="add"
                         onClick={handleCreateNewList}
                     >
