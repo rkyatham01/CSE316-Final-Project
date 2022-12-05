@@ -11,7 +11,7 @@
   --swatch-complement: #e1e4cb;
   --swatch-contrast: #111111;
   --swatch-accent: #669966;
-  --swatch-status: #123456;
+  --swatch-status: #93bee8;
   --my-font-family: "Robaaaoto";
   --bounceEasing: cubic-bezier(0.51, 0.92, 0.24, 1.15);
 }
@@ -128,7 +128,7 @@ body {
   display: flex;
   justify-content: center;
   background-color:hwb(57 66% 8%);
-  color: rgb(54, 11, 11);
+  color: rgb(136, 80, 80);
   position:absolute;
   width: 100%;
   left: 0%;
@@ -165,7 +165,7 @@ body {
 .list-card,
 .selected-list-card,
 .unselected-list-card {
-  font-size: 14pt;
+  font-size: 15pt;
   margin: 10px;
   padding: 20px;
   border-radius: 25px;
@@ -191,7 +191,7 @@ body {
 }
 
 .unselected-list-card {
-  background-color: var(--swatch-complement);
+  background-image: linear-gradient(to bottom right,  #F0E69D, #FAFAD2)
 }
 
 .list-card-button {
@@ -231,7 +231,7 @@ body {
 .playlist-cards-item-dragged-to {
   display: flex;
   align-items: center;
-  font-size: 48pt;
+  font-size: 35pt;
   height: 20%;
 }
 

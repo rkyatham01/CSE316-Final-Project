@@ -1,5 +1,7 @@
 import React, { useContext, useState } from 'react'
 import { GlobalStoreContext } from '../store'
+import { Button } from '@mui/material';
+import { red } from '@mui/material/colors';
 
 function SongCard(props) {
     const { store } = useContext(GlobalStoreContext);
@@ -70,13 +72,12 @@ function SongCard(props) {
                 href={"https://www.youtube.com/watch?v=" + song.youTubeId}>
                 {song.title} by {song.artist}
             </a>
-            <input
-                type="button"
+            <Button
+                sx={{transform:"translate(-5%, -5%)", width:"5px", height:"30px",backgroundColor:"goldenrod"}}
+                variant="contained"
                 id={"remove-song-" + index}
                 className="list-card-button"
-                value={"\u2715"}
-                onClick={handleRemoveSong}
-            />
+                onClick={handleRemoveSong}>{"\u2715"}</Button>
         </div>
     );
 }

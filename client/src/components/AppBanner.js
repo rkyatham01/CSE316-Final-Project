@@ -94,7 +94,7 @@ export default function AppBanner() {
     return (
         <Box sx={{ flexGrow: 1 }}>
 
-            <AppBar position="static" style={{ backgroundColor: 'blue', backgroundImage: 'linear-gradient(to bottom right,  #F0E69D, #FAFAD2)'}}>    
+            <AppBar position="static" style={{ backgroundColor: 'gold', backgroundImage: 'linear-gradient(to bottom right,  #F0E69D, #FAFAD2)'}}>    
                 <Toolbar>
                     <Typography                        
                         variant="h4"
@@ -106,7 +106,7 @@ export default function AppBanner() {
                         {/* <IconButton onClick={homeIconButton} style={{ textDecoration: 'none', color: 'goldenrod' } }><img src="../"></img></IconButton> */}
                     </Typography>
 
-                    <Box sx={{ display: { xs: 'none', md: 'flex'} }}>
+                    <Box sx={{ display: { xs: 'none', md: 'flex'}}}>
                         <IconButton
                             size="large"
                             edge="end"
