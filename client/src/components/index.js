@@ -13,6 +13,7 @@ import SplashScreen from './SplashScreen'
 import Statusbar from './Statusbar'
 import WorkspaceScreen from './WorkspaceScreen'
 import MUIErrorModal from './MUIErrorModal'
+import YoutubePlayer from './YoutubePlayer'
 
 /*
     This serves as a module so that we can import
@@ -35,5 +36,6 @@ export {
     SplashScreen,
     Statusbar, 
     WorkspaceScreen,
-    MUIErrorModal
+    MUIErrorModal,
+    YoutubePlayer
 }

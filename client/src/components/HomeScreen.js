@@ -12,6 +12,12 @@ import MUIDeleteModal from './MUIDeleteModal'
 import AddIcon from '@mui/icons-material/Add';
 import { Fab, Paper } from '@mui/material';
 import Typography from '@mui/material/Typography'
+import YoutubePlayer from './YoutubePlayer';
+import YouTube from 'react-youtube';
+import MUIEditSongModal from './MUIEditSongModal';
+import MUIErrorModal from './MUIErrorModal';
+import MUIRemoveSongModal from './MUIRemoveSongModal';
+
 /*
 
 /*
@@ -97,9 +103,7 @@ const HomeScreen = () => {
                 </Grid>
 
                 <Grid item xs={6}>
-                    <div>
-                        Yo2
-                    </div>
+                    <YouTube></YouTube>
                 </Grid>
 
                 <Grid item xs={5}></Grid>

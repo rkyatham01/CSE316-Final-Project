@@ -1,30 +1,28 @@
 import { useContext, useState } from 'react'
 import { GlobalStoreContext } from '../store'
 import Box from '@mui/material/Box';
-import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
 import ListItem from '@mui/material/ListItem';
 import TextField from '@mui/material/TextField';
 import { makeStyles } from "@mui/styles";
-import { border, borderRadius, height, maxWidth, padding, sizeWidth } from '@mui/system';
-import { blue, lightBlue } from '@mui/material/colors';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import React from 'react';
-import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
 import { List } from '@mui/material';
 import SongCard from './SongCard';
-import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
 import EditToolbar from './EditToolbar'
 import AuthContext from '../auth';
-import Stack from '@mui/system/Stack';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Button from '@mui/material/Button';
+import MUIEditSongModal from './MUIEditSongModal';
+import MUIErrorModal from './MUIErrorModal';
+import MUIRemoveSongModal from './MUIRemoveSongModal';
+
 
 /*
     This is a card in our list of top 5 lists. It lets select
@@ -35,56 +33,7 @@ import Button from '@mui/material/Button';
 */
 
 const useStyles = makeStyles({ //could create styles here and insert them into main function 
-    ListCardCss: {
-        border: "1px solid black", 
-        borderRadius: "1px",
-        maxHeight: 160,
-        width: "100%",
-        fontsize: "16pt", 
-        marginLeft: "5%",
-        marginBottom: "2%",
-        background: 'linear-gradient(to bottom right,  #F0E69D, #FAFAD2)',
-        alignItems: 'left'
-    },
-    
-    ListCardCss2: {
-        border: "1px solid black", 
-        borderRadius: "1px",
-        height: 400,
-        width: "100%",
-        marginLeft: "5%",
-        marginBottom: "5%",
-        background: 'linear-gradient(to bottom right,  #F0E69D, #FAFAD2)',
-    },
 
-    SongCardsStyle: {
-        display: 'flex'
-    },
-    
-    songCards: {
-        display: 'flex',
-    },
-
-    songNoneHide: {
-        position:'absolute',
-        left:'0%',
-        width:'100%',
-        maxHeight: '65%',
-        flexDirection: 'column',
-        overflow:'scroll',
-        background: 'transparent',
-    }, 
-
-    songHide: {
-        display:'none'
-    },
-
-    ExpandedCss: {
-    },
-
-    NonExpandedCss: {
-    }
-    
 });
 
 function ListCard(props) {
@@ -115,7 +64,6 @@ function ListCard(props) {
             editToolbar = <EditToolbar />;
         }
     }
-
     <Box sx={{ flexGrow: 1 }}>{editToolbar}</Box>
 
     function handleToggleEdit(event) {
@@ -154,36 +102,46 @@ function ListCard(props) {
         selectClass = "selected-list-card";
     }
 
+    let modalJSX = "";
+    if (store.isEditSongModalOpen()) {
+        modalJSX = <MUIEditSongModal />;
+    }
+    else if (store.isRemoveSongModalOpen()) {
+        modalJSX = <MUIRemoveSongModal />;
+    }
+
     let cardStatus = false;
     if (store.isListNameEditActive) {
         cardStatus = true;
-    }    
-    // let songcards = ""
-    // if (store.currentList !== null && store.currentListid == idNamePair._id){
-    //     songcards = 
-    //         <Box className = {validOrNot ? classes.songNoneHide : classes.songHide}>
-    //             <List>
-    //                 {
-    //                     store.currentList.songs.map((song, index) => (
-    //                         <SongCard
-    //                             className={classes.songCards}
-    //                             id={'playlist-song-' + (index)}
-    //                             key={'playlist-song-' + (index)}
-    //                             index={index}
-    //                             song={song}
-    //                         />
-    //                     ))           
-    //                 }
-                
-    //             </List>  
-    //         </Box>
-    // }
+    }
+
+    function handleAddNewSong() {
+        store.addNewSong();
+    }
+    function handleUndo() {
+        store.undo();
+    }
+    function handleRedo() {
+        store.redo();
+    }
+    function handleClose() {
+        store.closeCurrentList();
+    }
+    //expandActive && store.currentList && (store.currentList._id == idNamePair._id
+    function setCurrentListHandlr() {
+        store.setCurrentList(idNamePair._id)
+    }
 
     let cardElement =
     <div>
         <Accordion>
         <AccordionSummary
-        expandIcon={<ExpandMoreIcon/>}
+        expandIcon={<ExpandMoreIcon
+        onClick={(event) => {
+            setCurrentListHandlr()
+        }}
+        />}
+
         aria-controls="panel1a-content"
         id="panel1a-header"
         >
@@ -243,12 +201,24 @@ function ListCard(props) {
                 }
             </List>
          </Box>
-         
+         {modalJSX}
          <Box sx={{ flexDirection: 'row',  display: 'flex', gap:2, paddingTop:1}}>
-            <Button variant="contained" sx={{backgroundColor:"goldenrod"}} size="small">Add</Button>
-            <Button variant="contained" sx={{backgroundColor:"goldenrod"}} size="small">Undo</Button>
-            <Button variant="contained" sx={{backgroundColor:"goldenrod"}}  size="small">Redo</Button>
-            <Button variant="contained" sx={{backgroundColor:"goldenrod"}}  size="small">Delete</Button>
+            <Button variant="contained"
+                disabled={!store.canAddNewSong()}
+                onClick={handleAddNewSong}
+            sx={{backgroundColor:"goldenrod"}} size="small">Add</Button>
+            <Button variant="contained" sx={{backgroundColor:"goldenrod"}} size="small"
+                id='add-song-button'
+                disabled={!store.canUndo()}
+                onClick={handleUndo}
+            >Undo</Button>
+            <Button variant="contained" sx={{backgroundColor:"goldenrod"}}  size="small"
+                disabled={!store.canRedo()}
+                onClick={handleRedo}
+            >Redo</Button>
+            <Button variant="contained" sx={{backgroundColor:"goldenrod"}}  size="small"
+            
+            >Delete</Button>
             <Button variant="contained" sx={{backgroundColor:"goldenrod"}} size="small">Publish</Button>
             <Button variant="contained" sx={{backgroundColor:"goldenrod"}} size="small">Duplicate</Button>
          </Box>

@@ -77,7 +77,7 @@ function GlobalStoreContextProvider(props) {
                 return setStore({
                     currentModal : CurrentModal.NONE,
                     idNamePairs: payload.idNamePairs,
-                    currentList: null,
+                    currentList: payload.playlist,
                     currentSongIndex: -1,
                     currentSong: null,
                     newListCounter: store.newListCounter,
@@ -353,6 +353,7 @@ function GlobalStoreContextProvider(props) {
             payload: {currentSongIndex: songIndex, currentSong: songToEdit}
         });        
     }
+    
     store.showRemoveSongModal = (songIndex, songToRemove) => {
         storeReducer({
             type: GlobalStoreActionType.REMOVE_SONG,
@@ -496,12 +497,24 @@ function GlobalStoreContextProvider(props) {
     }
     store.updateCurrentList = function() {
         async function asyncUpdateCurrentList() {
-            const response = await api.updatePlaylistById(store.currentList._id, store.currentList);
+            let response = await api.updatePlaylistById(store.currentList._id, store.currentList);
             if (response.data.success) {
-                storeReducer({
-                    type: GlobalStoreActionType.SET_CURRENT_LIST,
-                    payload: store.currentList
-                });
+                response = await api.getPlaylistPairs()
+                if (response.data.success){
+                    let pairsArray = response.data.idNamePairs;
+                    storeReducer({
+                        type: GlobalStoreActionType.CHANGE_LIST_NAME,
+                        payload: {
+                            idNamePairs: pairsArray,
+                            playlist: store.currentList
+                        }
+                    })
+                }
+                // storeReducer({
+                //     type: GlobalStoreActionType.SET_CURRENT_LIST,
+                //     payload: store.currentList
+                // });
+
             }
         }
         asyncUpdateCurrentList();
