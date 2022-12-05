@@ -136,8 +136,6 @@ body {
 }
 
 #list-selector-list {
-  /* position: absolute;
-   */
   top: 0%;
   width: 100%;
   display:flex;
@@ -148,11 +146,13 @@ body {
 }
 
 #change-playlist-cards{
-  display:flex;
+  position:absolute;
+  left: 0%;
+  width: 100%;
+  max-height: 85%;
   flex-direction: column;
-  justify-content: flex-start;
-  height: 80%;
-  overflow-y:auto;
+  overflow:scroll;
+  background-image: transparent;
 }
 
 #playlist-selector{

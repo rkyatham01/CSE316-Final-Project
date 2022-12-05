@@ -7,14 +7,19 @@ import IconButton from '@mui/material/IconButton';
 import ListItem from '@mui/material/ListItem';
 import TextField from '@mui/material/TextField';
 import { makeStyles } from "@mui/styles";
-import { border, height } from '@mui/system';
-import { lightBlue } from '@mui/material/colors';
+import { border, borderRadius, height, maxWidth, padding, sizeWidth } from '@mui/system';
+import { blue, lightBlue } from '@mui/material/colors';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import React from 'react';
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
-import { List } from '@mui/material';
+import { Hidden, List } from '@mui/material';
 import SongCard from './SongCard';
+import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
+import EditToolbar from './EditToolbar'
+import AuthContext from '../auth';
+import Stack from '@mui/system/Stack';
+import EditSharpIcon from '@mui/icons-material/EditSharp';
 
 /*
     This is a card in our list of top 5 lists. It lets select
@@ -29,9 +34,10 @@ const useStyles = makeStyles({ //could create styles here and insert them into m
         border: "1px solid black", 
         borderRadius: "1px",
         backgroundColor: lightBlue,
-        height: "25%",
+        height: "15%",
+        maxHeight: "15%",
         width: "100%",
-        fontsize: "28pt", 
+        fontsize: "20pt", 
         marginLeft: "5%",
         marginBottom: "2%",
         background: 'linear-gradient(to bottom right,  #F0E69D, #FAFAD2)'
@@ -40,13 +46,34 @@ const useStyles = makeStyles({ //could create styles here and insert them into m
     ListCardCss2: {
         border: "1px solid black", 
         borderRadius: "1px",
-        backgroundColor: lightBlue,
-        height: "40%",
+        height: "35%",
         width: "100%",
-        fontsize: "28pt", 
         marginLeft: "5%",
-        marginBottom: "2%",
-        background: 'linear-gradient(to bottom right,  #F0E69D, #FAFAD2)'
+        marginBottom: "5%",
+        background: 'linear-gradient(to bottom right,  #F0E69D, #FAFAD2)',
+        paddingBottom: '70%'
+    },
+
+    SongCardsStyle: {
+        display: 'flex'
+    },
+    
+    songCards: {
+        display: 'flex',
+    },
+
+    songNoneHide: {
+        position:'absolute',
+        left:'0%',
+        width:'100%',
+        maxHeight: '65%',
+        flexDirection: 'column',
+        overflow:'scroll',
+        background: 'transparent',
+    }, 
+
+    songHide: {
+        display:'none'
     }
 });
 
@@ -56,6 +83,7 @@ function ListCard(props) {
     const [text, setText] = useState("");
     const [validOrNot, setter] = useState(false);
     const { idNamePair, selected } = props;
+    const { auth } = useContext(AuthContext);
     const classes = useStyles() //to use the styles within the component (invoking the hook)
 
     function handleLoadList(event, id) {
@@ -72,6 +100,16 @@ function ListCard(props) {
         }
     }
 
+        
+    let editToolbar = "";
+    if (auth.loggedIn) {
+        if (store.currentList) {
+            editToolbar = <EditToolbar />;
+        }
+    }
+
+    <Box sx={{ flexGrow: 1 }}>{editToolbar}</Box>
+
     function handleToggleEdit(event) {
         event.stopPropagation();
         toggleEdit();
@@ -84,7 +122,7 @@ function ListCard(props) {
         }
         setEditActive(newActive);
     }
-
+    
     async function handleDeleteList(event, id) {
         event.stopPropagation();
         let _id = event.target.id;
@@ -103,15 +141,35 @@ function ListCard(props) {
         setText(event.target.value);
     }
 
-    let selectClass = "unselected-list-card";
-    if (selected) {
-        selectClass = "selected-list-card";
-    }
+    // let selectClass = "unselected-list-card";
+    // if (selected) {
+    //     selectClass = "selected-list-card";
+    // }
+
     let cardStatus = false;
     if (store.isListNameEditActive) {
         cardStatus = true;
+    }    
+    let songcards = ""
+    if (store.currentList !== null && store.currentListid == idNamePair._id){
+        songcards = 
+            <Box className = {validOrNot ? classes.songNoneHide : classes.songHide}>
+                <List>
+                    {
+                        store.currentList.songs.map((song, index) => (
+                            <SongCard
+                                className={classes.songCards}
+                                id={'playlist-song-' + (index)}
+                                key={'playlist-song-' + (index)}
+                                index={index}
+                                song={song}
+                            />
+                        ))           
+                    }
+                
+                </List>  
+            </Box>
     }
-
     let cardElement =
         <ListItem 
             className = {validOrNot ? classes.ListCardCss2 : classes.ListCardCss}
@@ -124,61 +182,71 @@ function ListCard(props) {
             //     handleLoadList(event, idNamePair._id)
             // }}
         >
-            <Box sx={{ p: 1, flexGrow: 1 }}>{idNamePair.name}</Box>
+        <Stack spacing={3}>
+            <Box sx={{display: 'flex', flexDirection: 'row'}}>
+                
+                <Box sx={{ p: 1, flexGrow: 1 }}>{idNamePair.name}</Box>
+                <Box>
+                    By 
+                </Box>
 
-            <Box >
-                <IconButton>
-                <ThumbUpIcon></ThumbUpIcon>
-                </IconButton>
-            </Box>
+                <Box >
+                    <IconButton>
+                    <ThumbUpIcon></ThumbUpIcon>
+                    </IconButton>
+                </Box>
 
+                <Box >
+                    <IconButton>
+                    <ThumbDownIcon></ThumbDownIcon>
+                    </IconButton>
+                </Box>
 
-            <Box >
-                <IconButton>
-                <ThumbDownIcon></ThumbDownIcon>
-                </IconButton>
-            </Box>
-
-            <Box id='change-playlist-cards'>
-                <List 
-                    sx={{ width: '100%', bgcolor: 'background.paper' }}
-                >
-                    {
-                        store.currentList.songs.map((song, index) => (
-                            <SongCard
-                                id={'playlist-song-' + (index)}
-                                key={'playlist-song-' + (index)}
-                                index={index}
-                                song={song}
-                            />
-                        ))  
-                    }
-                </List>  
-            </Box>
-
-            <Box >
+                <Box >
+                    <IconButton
+                    onClick={(event) => {
+                        setter(true) //setter is function that sets variable or boolean (UseState)
+                        store.setCurrentList(idNamePair._id)
+                    }}
+                    >
+                    <KeyboardDoubleArrowDownIcon></KeyboardDoubleArrowDownIcon>
+                    </IconButton>
+                </Box>
+                <Box >       
                 <IconButton
                 onClick={(event) => {
-                    // handleLoadList(event, idNamePair._id) //changes to the respective playlist
-                    setter(true) //setter is function that sets variable or boolean (UseState)
+                    setter(false) //setter is function that sets variable or boolean (UseState)
                 }}
                 >
-                <KeyboardDoubleArrowDownIcon></KeyboardDoubleArrowDownIcon>
+                <KeyboardDoubleArrowUpIcon></KeyboardDoubleArrowUpIcon>
                 </IconButton>
-            </Box>
-
-            <Box sx={{ p: 1 }}>
+                </Box>
+                
+                <Box sx={{ p: 1 }}>
                 <IconButton onClick={handleToggleEdit} aria-label='edit'>
-                    <EditIcon style={{fontSize:'15pt'}} />
+                    <EditIcon style={{fontSize:'13pt'}} />
                 </IconButton>
             </Box>
             <Box sx={{ p: 1 }}>
                 <IconButton onClick={(event) => {
                         handleDeleteList(event, idNamePair._id)
                     }} aria-label='delete'>
-                    <DeleteIcon style={{fontSize:'15pt'}} />
+                    <DeleteIcon style={{fontSize:'13pt'}} />
                 </IconButton>
             </Box>
+            by {idNamePair.username}
+            </Box>
+            {songcards}
+            <Box sx={{ p: 1 }}>
+                
+                <IconButton onClick={(event) => {
+                   //     handleedit(event, idNamePair._id)
+                    }} aria-label='edit'>
+                    <EditSharpIcon style={{fontSize:'13pt'}} />
+                </IconButton>
+            </Box>
+
+        </Stack>
         </ListItem>
 
     if (editActive) {
@@ -200,28 +268,10 @@ function ListCard(props) {
                 autoFocus
             />
     }
+
     return (
         cardElement
     );
 }
 
 export default ListCard;
-
-{/* <Box id='change-playlist-cards'>
-<List 
-    sx={{ width: '100%', bgcolor: 'background.paper' }}
->
-    {
-        store.currentList.songs.map((song, index) => (
-            <SongCard
-                id={'playlist-song-' + (index)}
-                key={'playlist-song-' + (index)}
-                index={index}
-                song={song}
-            />
-        ))  
-    }
- </List>  
-
- { modalJSX }
- </Box> */}
