@@ -26,7 +26,6 @@ createPlaylist = (req, res) => {
 
     User.findOne({ _id: req.userId }, (err, user) => {
         console.log("user found: " + JSON.stringify(user));
-        user.playlists.push(playlist._id);
         user
             .save()
             .then(() => {
@@ -122,19 +121,10 @@ getPlaylistPairs = async (req, res) => {
                         .status(404)
                         .json({ success: false, error: 'Playlists not found' })
                 }
-                else {
+                else{
                     console.log("Send the Playlist pairs");
                     // PUT ALL THE LISTS INTO ID, NAME PAIRS
-                    let pairs = [];
-                    for (let key in playlists) {
-                        let list = playlists[key];
-                        let pair = {
-                            _id: list._id,
-                            name: list.name
-                        };
-                        pairs.push(pair);
-                    }
-                    return res.status(200).json({ success: true, idNamePairs: pairs })
+                    return res.status(200).json({ success: true, idNamePairs: playlists })
                 }
             }).catch(err => console.log(err))
         }
