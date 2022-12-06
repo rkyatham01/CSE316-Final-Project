@@ -17,6 +17,8 @@ import YouTube from 'react-youtube';
 import MUIEditSongModal from './MUIEditSongModal';
 import MUIErrorModal from './MUIErrorModal';
 import MUIRemoveSongModal from './MUIRemoveSongModal';
+import YoutubeCombined from './YoutubeCombined';
+import YoutubeComments from './YoutubeComments';
 
 /*
 
@@ -103,7 +105,7 @@ const HomeScreen = () => {
                 </Grid>
 
                 <Grid item xs={6}>
-                    <YouTube></YouTube>
+                    <YoutubeCombined></YoutubeCombined>
                 </Grid>
 
                 <Grid item xs={5}></Grid>

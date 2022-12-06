@@ -44,18 +44,19 @@ function ListCard(props) {
     const { idNamePair, selected } = props;
     const { auth } = useContext(AuthContext);
     const classes = useStyles() //to use the styles within the component (invoking the hook)
+    const [nullOrOpenPlaylist, settingPlaylist] = useState(false)
 
     function handleLoadList(event, id) {
-        console.log("handleLoadList for " + id);
-        if (!event.target.disabled) {
-            let _id = event.target.id;
-            if (_id.indexOf('list-card-text-') >= 0)
-                _id = ("" + _id).substring("list-card-text-".length);
+        // console.log("handleLoadList for " + id);
+        // if (!event.target.disabled) {
+        //     let _id = event.target.id;
+        //     if (_id.indexOf('list-card-text-') >= 0)
+        //         _id = ("" + _id).substring("list-card-text-".length);
 
-            console.log("load " + event.target.id);
+        //     console.log("load " + event.target.id);
+        //     store.setCurrentList(idNamePair)
+        setCurrentListHandlr()
             // CHANGE THE CURRENT LIST
-            store.setCurrentList(id);
-        }
     }
 
     let editToolbar = "";
@@ -129,7 +130,15 @@ function ListCard(props) {
     }
     //expandActive && store.currentList && (store.currentList._id == idNamePair._id
     function setCurrentListHandlr() {
-        store.setCurrentList(idNamePair._id)
+        if (nullOrOpenPlaylist == true){
+            console.log("set playlist to null")
+            store.setCurrentList(null);
+        }else{
+            console.log("set actual playlist")
+            store.setCurrentList(idNamePair);
+        }
+        settingPlaylist(!nullOrOpenPlaylist)
+       // store.setCurrentList(idNamePair._id)
     }
 
     let cardElement =
