@@ -43,7 +43,7 @@ createPlaylist = (req, res) => {
                     })
                     .catch(error => {
                         console.log("Erroroccured4");
-
+                        console.log(error)
                         return res.status(400).json({
                             errorMessage: 'Playlist Not Created!'
                         })
@@ -186,6 +186,8 @@ updatePlaylist = async (req, res) => {
 
                     list.name = body.playlist.name;
                     list.songs = body.playlist.songs;
+                    list.comments = body.playlist.comments;
+                    //add dislikes likes etc
                     list
                         .save()
                         .then(() => {

@@ -312,7 +312,7 @@ function GlobalStoreContextProvider(props) {
         // THIS FUNCTION CREATES A NEW LIST
     store.createDupList = function (list) {
         async function asyncDuplicateList(){
-            const response = api.createPlaylist(`Copy of ${list.name}`, list.songs, auth.user.userEmail, auth.user.username);
+            const response = api.createPlaylist(`Copy of ${list.name}`, list.songs, auth.user.email, auth.user.username);
             if(response.status === 201){
                 tps.clearAllTransactions();
                 let newList = response.data.playlist;
@@ -564,6 +564,32 @@ function GlobalStoreContextProvider(props) {
         }
         asyncUpdateCurrentList();
     }
+
+    store.updateNewListForPlaying = function() {
+        async function asyncUpdateCurrentList() {
+            let response = await api.updatePlaylistById(store.newListForPlaying._id, store.newListForPlaying);
+            if (response.data.success) {
+                response = await api.getPlaylistPairs()
+                if (response.data.success){
+                    let pairsArray = response.data.idNamePairs;
+                    storeReducer({
+                        type: GlobalStoreActionType.CHANGE_LIST_NAME,
+                        payload: {
+                            idNamePairs: pairsArray,
+                            playlist: store.currentList
+                        }
+                    })
+                }
+                // storeReducer({
+                //     type: GlobalStoreActionType.SET_CURRENT_LIST,
+                //     payload: store.currentList
+                // });
+
+            }
+        }
+        asyncUpdateCurrentList();
+    }
+
     store.undo = function () {
         tps.undoTransaction();
     }

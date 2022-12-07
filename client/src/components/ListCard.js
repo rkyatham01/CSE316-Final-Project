@@ -144,6 +144,10 @@ function ListCard(props) {
         store.closeCurrentList();
     }
 
+    function deletePlaylist(event) {
+        handleDeleteList(event, store.currentList._id);
+    }
+
     let shouldDrop = (store.currentList !== null) && (store.currentList._id == idNamePair._id)
 
     function settingFunction(){
@@ -200,7 +204,7 @@ function ListCard(props) {
           onClick={handleRedo}
       >Redo</Button>
       <Button variant="contained" sx={{backgroundColor:"goldenrod"}}  size="small"
-      
+      onClick={deletePlaylist}
       >Delete</Button>
       <Button variant="contained" sx={{backgroundColor:"goldenrod"}} size="small">Publish</Button>
       <Button variant="contained" sx={{backgroundColor:"goldenrod"}} onClick={CreateDupPlaylist} size="small">Duplicate</Button>

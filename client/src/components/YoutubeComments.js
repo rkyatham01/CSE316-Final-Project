@@ -1,74 +1,75 @@
 import YoutubePlayer from "./YoutubePlayer";
 import YoutubeCombined from "./YoutubeCombined"
-import { GlobalStoreContext } from "../store";
 import { useContext } from "react";
 import AuthContext from "../auth";
 import { TextField } from "@mui/material";
 import List from '@mui/material/List'
 import CommentCard from './CommentCard'
 import Box from '@mui/material/Box'
-import { GlobalStoreActionType } from "../store";
+import { GlobalStoreContext } from "../store";
 import { useState } from "react";
 
 export default function YoutubeComments() {
-    const { store } = useContext(GlobalStoreActionType);
+    const { store } = useContext(GlobalStoreContext);
     const { auth } = useContext(AuthContext);
     const  [value, setValue ] = useState("");
+
+    const changeHandler = e => {
+        setValue(e.target.value);
+    }
+
+    let user = "";
+
+    if (auth.user){
+        user = auth.user.username;
+    } else{
+        user="";
+    }
+
+    let comments = "";
+    if (store.newListForPlaying) { 
+        comments = store.newListForPlaying.comments;
+    }else{
+        comments = "";
+    }
+
+    function handlesPressedKeys(e) {
+        if (e.key === "Enter"){
+            let thenewCommentText = e.target.value; //targets a text field, value refers to what it in 
+            setValue(""); //resets the input box
+            store.newListForPlaying.comments.push( {user: user, comment: thenewCommentText})
+            store.updateNewListForPlaying();
+        };
+    }
     
+    let list=<div> Default, No list Selected </div>
 
-    // const handleChange = e => {
-    //     setValue(e.target.value);
-    // }
-
-    // function handleKeyPress(e) {
-    //     if (e.code === "Enter comment"){
-    //         let newCommentText = e.target.value; //geting new comment
-    //         let newComment = {user: user, comment: newCommentText};
-    //         setValue("");
-    //         store.currentList.comments.push(newComment)
-    //         store.updateCurrentList();
-    //     };
-    // }
-
-    // let comments = "";
-    // if (store.currentList) { 
-    //     comments = store.currentList.comments;
-    // }
-    // let user="";
-    // if (auth.user){
-    //     user = auth.user.userName;
-    // }
-
-    // let list=<div> NO List Selected! </div>
-    // if (user !== ""){
-    //     if(comments.length != 0){
-    //         list = 
-    //         <div>
-    //             <List
-    //             id="playlist-cards"
-    //             sx={{width: '100%', bgcolor: 'background.paper', height: '%5'}}>
-    //             {
-    //                 comments.map((el, index) => {
-    //                     <CommentCard
-    //                         comment={el.comment}
-    //                         user={el.user}
-    //                         index={index}
-    //                     ></CommentCard>
-    //                 })
-    //             }
-    //             </List>
-    //         <Box textAlign='center'>
-    //             <TextField value={value} onKeyPress={handleKeyPress} onChange={handleChange} fullWidth label='Comment here!'> </TextField>
-    //         </Box>
-    //     </div>
-    //     }
-    //     else{
-    //         list=<div> No Comments Yet! </div>
-    //     }
-    // }
+    if (user !== ""){
+        if(store.newListForPlaying){
+            list = 
+            <div>
+                <List
+                sx={{width: '100%', bgcolor: 'lightgoldenrodyellow', height: '%50'}}>
+                {
+                    store.newListForPlaying.comments.map((usr, index) => {
+                        return(<CommentCard
+                            comment={usr.comment}
+                            user={usr.user}
+                            key={index}
+                        ></CommentCard>)
+                    })
+                }
+                </List>
+                
+            <Box textAlign='center' sx={{border: 1}}>
+                <TextField value={value} onKeyPress={handlesPressedKeys} onChange={changeHandler} fullWidth label='Comment here!'> </TextField>
+            </Box>
+        </div>
+         }
+     }
     return (
-       <Box id='song-cards-container' sx={{overflowY: 'auto', maxHeight: 250}}>
-        {/* {list} */}
+       <Box id='song-cards-container' sx={{overflowY: 'auto', maxHeight: 300}}> 
+            {list}
        </Box>
     );
 }

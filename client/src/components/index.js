@@ -14,6 +14,7 @@ import Statusbar from './Statusbar'
 import WorkspaceScreen from './WorkspaceScreen'
 import MUIErrorModal from './MUIErrorModal'
 import YoutubePlayer from './YoutubePlayer'
+import YoutubeComments from './YoutubeComments'
 
 /*
     This serves as a module so that we can import
@@ -37,5 +38,6 @@ export {
     Statusbar, 
     WorkspaceScreen,
     MUIErrorModal,
-    YoutubePlayer
+    YoutubePlayer,
+    YoutubeComments
 }

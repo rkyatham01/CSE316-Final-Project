@@ -171,6 +171,16 @@ body {
   border-radius: 25px;
 }
 
+.list-card2,
+.selected-list-card,
+.unselected-list-card {
+  font-size: 10pt;
+  margin: 10px;
+  padding: 2px;
+  border-radius: 25px;
+  word-wrap: break-word;
+}
+
 .list-card:aria-disabled,
 .list-card[aria-disabled] {
   border: 1px solid #999999;

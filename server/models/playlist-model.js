@@ -19,6 +19,13 @@ const playlistSchema = new Schema(
             user: String,
             comment : String
         }], required:true},
+
+        publish:{ type:[{
+            boolean : 
+            data :
+        ]}
+
+        }
     
         songs: { type: [{
             title: String,
