@@ -20,10 +20,10 @@ const playlistSchema = new Schema(
             comment : String
         }], required:true},
 
-        publish:{ type:[{
-            boolean : 
-            data :
-        ]}
+        // publish:{ type:[{
+        //     boolean : 
+        //     data :
+        // ]}
 
         }
     
