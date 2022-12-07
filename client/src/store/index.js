@@ -565,6 +565,34 @@ function GlobalStoreContextProvider(props) {
         asyncUpdateCurrentList();
     }
 
+    store.updatePlaylistPublished = function() {
+        async function asyncUpdateCurrentList() {
+            let playlist = store.currentList;
+            let publishedDate = new Date();
+            playlist.publish = {isPublished:true,publishDate:publishedDate}
+            console.log(playlist.publish)
+            let response = await api.updatePlaylistById(playlist._id, playlist);
+            
+            if (response.data.success) {
+                response = await api.getPlaylistPairs()
+                if (response.data.success){
+                    let pairsArray = response.data.idNamePairs;
+                    storeReducer({
+                        type: GlobalStoreActionType.CHANGE_LIST_NAME,
+                        payload: {
+                            idNamePairs: pairsArray,
+                            playlist: playlist
+                        }
+                    })
+                    console.log("got here")
+                    store.loadIdNamePairs()
+                }
+
+            }
+        }
+        asyncUpdateCurrentList();
+    }
+
     store.updateNewListForPlaying = function() {
         async function asyncUpdateCurrentList() {
             let response = await api.updatePlaylistById(store.newListForPlaying._id, store.newListForPlaying);

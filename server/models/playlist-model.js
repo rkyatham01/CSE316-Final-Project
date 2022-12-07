@@ -20,12 +20,11 @@ const playlistSchema = new Schema(
             comment : String
         }], required:true},
 
-        // publish:{ type:[{
-        //     boolean : 
-        //     data :
-        // ]}
-
-        }
+        publish:{ type:{
+             isPublished: {type:Boolean, required:true},
+             publishDate: {type: Date}
+            }
+        },
     
         songs: { type: [{
             title: String,

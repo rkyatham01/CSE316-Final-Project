@@ -79,6 +79,24 @@ const HomeScreen = () => {
             }
             </List>;
     }
+
+    // if (store) { (All List Screen)
+    //     listCard = 
+    //         <List sx={{ width: '100%', left: '0%' }}>
+    //         {
+    //             store.idNamePairs.filter(Conditions).map((pair) => (
+    //                 <ListCard
+    //                     key={pair._id}
+    //                     idNamePair={pair}
+    //                     selected={false}
+    //                 />
+    //             ))
+    //         }
+    //         </List>;
+    // }
+
+    //User Screen published ones only (shows blank, search by user)
+
     return (
         <Box
             className={classes.OuterBox} //outer Box

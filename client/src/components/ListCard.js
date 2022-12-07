@@ -13,11 +13,7 @@ import { List } from '@mui/material';
 import SongCard from './SongCard';
 import EditToolbar from './EditToolbar'
 import AuthContext from '../auth';
-import Accordion from '@mui/material/Accordion';
-import AccordionSummary from '@mui/material/AccordionSummary';
 import Typography from '@mui/material/Typography';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import AccordionDetails from '@mui/material/AccordionDetails';
 import Button from '@mui/material/Button';
 import MUIEditSongModal from './MUIEditSongModal';
 import MUIErrorModal from './MUIErrorModal';
@@ -35,11 +31,9 @@ import { getPlaylistById, getPlaylistPairs } from '../store/store-request-api';
 */
 
 const useStyles = makeStyles({ //could create styles here and insert them into main function 
-    NonExpandedCss: {
-    },
 
-    ExpandedCss: {
-        flexDirection: 'column'
+    NonpublishedCss: {
+
     }
 
 });
@@ -54,20 +48,24 @@ function ListCard(props) {
     const [nullOrOpenPlaylist, settingPlaylist] = useState(false)
     const [validOrNot, setter] = useState(false); //for CSS
 
-    function handleLoadList(event, id) {
-        // console.log("handleLoadList for " + id);
-        // if (!event.target.disabled) {
-        //     let _id = event.target.id;
-        //     if (_id.indexOf('list-card-text-') >= 0)
-        //         _id = ("" + _id).substring("list-card-text-".length);
+    const [publishOrNot, setterForPublish] = useState(false); //for publish
 
-        //     console.log("load " + event.target.id);
+    function handleLoadList(event, id) {
              store.setCurrentList(idNamePair)
-            //   setCurrentListHandlr()
             // CHANGE THE CURRENT LIST
         }
-
     
+    function publishPlaylist(){
+       store.updatePlaylistPublished()
+    }
+
+      //set it to a color, set the buttons, (keep duplicate and delete)
+    
+        //render based on publish or not
+        //set the 2 other screens
+        
+        //filter the store.idnamepairs, pass that published lists into the other 2 screens
+
     let editToolbar = "";
     if (auth.loggedIn) {
         if (store.currentList) {
@@ -167,6 +165,7 @@ function ListCard(props) {
     }
 
     let expandedElement = ""
+
     if(shouldDrop){
     expandedElement = <>
     <Box sx={{ flexDirection: 'column'}}>
@@ -206,23 +205,58 @@ function ListCard(props) {
       <Button variant="contained" sx={{backgroundColor:"goldenrod"}}  size="small"
       onClick={deletePlaylist}
       >Delete</Button>
-      <Button variant="contained" sx={{backgroundColor:"goldenrod"}} size="small">Publish</Button>
+      <Button variant="contained" sx={{backgroundColor:"goldenrod"}} onClick={publishPlaylist} size="small">Publish</Button>
       <Button variant="contained" sx={{backgroundColor:"goldenrod"}} onClick={CreateDupPlaylist} size="small">Duplicate</Button>
    </Box>
 
    <Box sx={{ flexDirection: 'row', display: 'flex', gap:'30%', paddingTop:2}}>
-      <Typography>Published: Insert Data</Typography>
+      <Typography>Published: {store.currentList.publish.publishDate} </Typography>
       <Typography> Listens: Insert Number </Typography>
    </Box>
    </Box>
    </>
- }else{
-    expandedElement = <></>
+ }
+
+ if (store.currentList && store.currentList.publish.isPublished === true && expandedElement !== ""){
+    expandedElement = <>
+    <Box sx={{ flexDirection: 'column'}}>
+    <Box id ='song-cards-container' sx = {{overflowY:'auto', maxHeight: 250}}>
+      <List 
+          id="playlist-cards" 
+          sx={{ width: '100%', bgcolor: 'background.paper', height:'%5' }}
+      >
+          {
+              idNamePair.songs.map((song, index) => (
+                  <SongCard
+                      id={'playlist-song-' + (index)}
+                      key={'playlist-song-' + (index)}
+                      index={index}
+                      song={song}
+                  />
+              ))  
+          }
+      </List>
+   </Box>
+
+   {modalJSX}
+   <Box sx={{ flexDirection: 'row',  display: 'flex', gap:2, paddingTop:1}}>
+      <Button variant="contained" sx={{backgroundColor:"goldenrod"}}  size="small"
+      onClick={deletePlaylist}
+      >Delete</Button>
+      <Button variant="contained" sx={{backgroundColor:"goldenrod"}} onClick={CreateDupPlaylist} size="small">Duplicate</Button>
+   </Box>
+
+   <Box sx={{ flexDirection: 'row', display: 'flex', gap:'30%', paddingTop:2}}>
+      <Typography>Published: {store.currentList.publish.publishDate} </Typography>
+      <Typography> Listens: Insert Number </Typography>
+   </Box>
+   </Box>
+   </>
  }
 
     let cardElement =
 
-    <Box className = {validOrNot ? classes.NonExpandedCss : classes.ExpandedCss} >
+    <Box style={idNamePair.publish && idNamePair.publish.isPublished ? {backgroundColor: 'red'} : {}}>
         <ListItem 
             id={idNamePair._id}
             key={idNamePair._id}
