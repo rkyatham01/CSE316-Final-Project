@@ -249,7 +249,7 @@ function ListCard(props) {
    <Box sx={{ flexDirection: 'row', display: 'flex', gap:'30%', paddingTop:2}}>
       <Typography>Published: {store.currentList.publish.publishDate} </Typography>
       <Typography> Listens: Insert Number </Typography>
-   </Box>
+     </Box>
    </Box>
    </>
  }
@@ -264,8 +264,8 @@ function ListCard(props) {
             style={{ width: '100%', fontSize:'48pt'}}
             button
             onDoubleClick={ClosesOtherOne}
-            >  
-        
+            >
+
             <Box sx={{ p: 1, flexGrow: 1 }}>
                 <Box sx={{fontSize:30}}>
                     <div onClick={EditPlaylistName}>
