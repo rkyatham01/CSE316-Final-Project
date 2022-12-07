@@ -8,79 +8,73 @@ import StopIcon from '@mui/icons-material/Stop';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
 
 export default function YoutubePlayer() {
     // THIS IS THE INDEX OF THE SONG CURRENTLY IN USE IN THE PLAYLIST
     const { store } = useContext(GlobalStoreContext)
-    const [currSongIndx, setNewSong] = useState(0);
-    const [player, setPlayer] = useState("");
-
-    let currentSong = 0;
+    const [youTubePlayer, setPlayer] = useState();
 
     let playlist = []
-    
-    if (store.currentList){
-        playlist = store.currentList.songs.map((song) => song.youTubeId);
+    if (store.newListForPlaying){
+        playlist = store.newListForPlaying.songs
     }
 
+    if (store.newListForPlaying && playlist.length!=0){
+
+    let currSongIndx = 0
     const playerOptions = {
-        height: '390',
-        width: '550',
+        height: '230',
+        width: '400',
         playerVars: {
             // https://developers.google.com/youtube/player_parameters
             autoplay: 0,
         },
     };
-
-    function stopVideo(){
-        player.pauseVideo();
-    }
-
-    function nextSong() { 
-        setNewSong(currSongIndx+1);
-        setNewSong(currSongIndx % playlist.length);
-        loadAndPlayCurrentSong(player);
-    }
-
-    // function prevSong() { 
-    //     setNewSong(currSongIndx-1)
-    //     setNewSong(currSongIndx % playlist.length);
-    // }
     
-    function prevSong() { 
-        setNewSong(currSongIndx-1);
-        setNewSong(currSongIndx % playlist.length);
-        loadAndPlayCurrentSong(player);
+    function pauseSong() {
+        youTubePlayer.pauseVideo();
     }
 
-    // THIS FUNCTION LOADS THE CURRENT SONG INTO
-    // THE PLAYER AND PLAYS IT
+    function playSong() {
+        youTubePlayer.playVideo();
+    }
+
     function loadAndPlayCurrentSong(player) {
-        let song = playlist[currentSong];
-        player.loadVideoById(song);
-        player.playVideo();
+            let song = playlist[currSongIndx].youTubeId;
+            player.loadVideoById(song);
+            player.playVideo();
     }
 
-    // THIS FUNCTION INCREMENTS THE PLAYLIST SONG TO THE NEXT ONE
-    function incSong() {
-        currentSong++;
-        currentSong = currentSong % playlist.length;
+    function incSong() { 
+            currSongIndx = currSongIndx + 1
+            if (currSongIndx >= playlist.length){
+                currSongIndx = playlist.length-1
+            }
+       }
+
+    function nextSongBut() {
+            currSongIndx = currSongIndx + 1
+            if (currSongIndx >= playlist.length){
+                currSongIndx = playlist.length-1
+            }
+        loadAndPlayCurrentSong(youTubePlayer);
     }
 
-    function playVideoFunc() {
-        player.playVideo();
+    function prevSongBut() {
+            currSongIndx = currSongIndx - 1
+            if (currSongIndx <= 0){
+                currSongIndx = currSongIndx=0 //force sets it to 0 if this happens
+        }
+        loadAndPlayCurrentSong(youTubePlayer);
     }
+
 
     function onPlayerReady(event) {
         loadAndPlayCurrentSong(event.target);
         event.target.playVideo();
-        setPlayer(event.target)
+        setPlayer(event.target);
     }
-
-    // THIS IS OUR EVENT HANDLER FOR WHEN THE YOUTUBE PLAYER'S STATE
-    // CHANGES. NOTE THAT playerStatus WILL HAVE A DIFFERENT INTEGER
-    // VALUE TO REPRESENT THE TYPE OF STATE CHANGE. A playerStatus
-    // VALUE OF 0 MEANS THE SONG PLAYING HAS ENDED.
     function onPlayerStateChange(event) {
         let playerStatus = event.data;
         let player = event.target;
@@ -104,43 +98,51 @@ export default function YoutubePlayer() {
         } else if (playerStatus === 5) {
             // THE VIDEO HAS BEEN CUED
             console.log("5 Video cued");
-            player.playVideo()
+            player.playVideo();
         }
     }
 
-    if(store.currentList && store.currentList.songs.length !== 0 && playlist[currentSong] !== undefined){
+    if (playlist.length != 0 && store.newListForPlaying){ //play and display only if valid
         return(
           <Box>
+            <Box>
             <YouTube
-            videoId={playlist[currentSong].youTubeId}
+            videoId={playlist[currSongIndx].youTubeId}
             opts={playerOptions}
             onReady={onPlayerReady}
-            onStateChange={onPlayerStateChange}        
-            >
-            </YouTube>
+            onStateChange={onPlayerStateChange}></YouTube>    
+            <Typography sx={{fontsize:18}}> Now Playing: </Typography> 
+            </Box>
+
+            <Box>
+                <Typography sx={{fontSize:10}}> Playlist: {store.newListForPlaying.name} </Typography>
+                <Typography sx={{fontSize:10}}> Song #: {currSongIndx} </Typography>
+                <Typography sx={{fontSize:10}}> Title: {store.newListForPlaying.songs[currSongIndx].title} </Typography>
+                <Typography sx={{fontSize:10}}> Artist: {store.newListForPlaying.songs[currSongIndx].artist} </Typography>
+            </Box>
 
             <Box  sx={{ flexDirection: 'row', display: 'flex'}}>
-                <IconButton onClick={prevSong} aria-label='backward-button'>
-                    <SkipPreviousIcon style={{fontSize:'22pt'}} />
+                <IconButton onClick={prevSongBut} aria-label='backward-button'>
+                    <SkipPreviousIcon style={{fontSize:'15pt'}} />
                 </IconButton>
 
-                <IconButton onClick={stopVideo} aria-label='stop'>
-                    <StopIcon style={{fontSize:'22pt'}} />
+                <IconButton onClick={pauseSong} aria-label='stop'>
+                    <StopIcon style={{fontSize:'15pt'}} />
                 </IconButton>
 
-                <IconButton onClick={playVideoFunc} aria-label='play'>
-                    <PlayArrowIcon style={{fontSize:'22pt'}} />
+                <IconButton onClick={playSong} aria-label='play'>
+                    <PlayArrowIcon style={{fontSize:'15pt'}} />
                 </IconButton>
 
-                <IconButton onClick={nextSong} aria-label='forward-button'>
-                    <SkipNextIcon style={{fontSize:'22pt'}} />
+                <IconButton onClick={nextSongBut} aria-label='forward-button'>
+                    <SkipNextIcon style={{fontSize:'15pt'}} />
                 </IconButton>
             </Box>
         </Box>
         )
+      }
     }
-    return (<div>
-    No Playlist is Selected Currently
-    </div>)
+    return (
+        <div> No Player Currently Playing! </div>
+    )
 }
-

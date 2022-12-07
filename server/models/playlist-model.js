@@ -20,7 +20,6 @@ const playlistSchema = new Schema(
             comment : String
         }], required:true},
     
-    
         songs: { type: [{
             title: String,
             artist: String,

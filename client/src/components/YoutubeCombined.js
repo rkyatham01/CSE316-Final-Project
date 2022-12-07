@@ -6,30 +6,30 @@ import { useState } from "react";
 import YoutubePlayer from "./YoutubePlayer";
 
 export default function YoutubeCombined() {
-    const [set, setterFunc]= useState(false)
+    const [changeSet, setterFunc]= useState(false)
 
-    const handlePlayer = () => {
+    const handleplyr = () => {
         setterFunc(false)
     }
 
-    const handleComments = () => {
+    const handleCmments = () => {
         setterFunc(true)
     }
 
     return(
         <Box>
-            <Button variant="contained" onClick={handlePlayer}>
+            <Button variant="contained" onClick={handleplyr}>
                 Player
             </Button>
-            <Button variant="contained" onClick={handleComments}>
+            <Button variant="contained" onClick={handleCmments}>
                 Comments
             </Button>
 
             <Box sx={{mx:'auto'}}>
-                <div style={ set ? {display: "inline"} : { display: "none" }}>
+                <div style={ changeSet ? {display: "inline"} : { display: "none" }}>
                     <YoutubeComments></YoutubeComments>
                 </div>
-                <div style={ set ? { display: "none"} : { display: "inline"}}>
+                <div style={ changeSet ? { display: "none"} : { display: "inline"}}>
                     <YoutubePlayer></YoutubePlayer>
                 </div>
             </Box>

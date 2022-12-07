@@ -22,7 +22,9 @@ import Button from '@mui/material/Button';
 import MUIEditSongModal from './MUIEditSongModal';
 import MUIErrorModal from './MUIErrorModal';
 import MUIRemoveSongModal from './MUIRemoveSongModal';
-
+import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
+import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
+import { getPlaylistById, getPlaylistPairs } from '../store/store-request-api';
 
 /*
     This is a card in our list of top 5 lists. It lets select
@@ -33,6 +35,12 @@ import MUIRemoveSongModal from './MUIRemoveSongModal';
 */
 
 const useStyles = makeStyles({ //could create styles here and insert them into main function 
+    NonExpandedCss: {
+    },
+
+    ExpandedCss: {
+        flexDirection: 'column'
+    }
 
 });
 
@@ -40,11 +48,11 @@ function ListCard(props) {
     const { store } = useContext(GlobalStoreContext);
     const [editActive, setEditActive] = useState(false);
     const [text, setText] = useState("");
-    const [validOrNot, setter] = useState(false);
     const { idNamePair, selected } = props;
     const { auth } = useContext(AuthContext);
     const classes = useStyles() //to use the styles within the component (invoking the hook)
     const [nullOrOpenPlaylist, settingPlaylist] = useState(false)
+    const [validOrNot, setter] = useState(false); //for CSS
 
     function handleLoadList(event, id) {
         // console.log("handleLoadList for " + id);
@@ -54,11 +62,12 @@ function ListCard(props) {
         //         _id = ("" + _id).substring("list-card-text-".length);
 
         //     console.log("load " + event.target.id);
-        //     store.setCurrentList(idNamePair)
-        setCurrentListHandlr()
+             store.setCurrentList(idNamePair)
+            //   setCurrentListHandlr()
             // CHANGE THE CURRENT LIST
-    }
+        }
 
+    
     let editToolbar = "";
     if (auth.loggedIn) {
         if (store.currentList) {
@@ -116,6 +125,12 @@ function ListCard(props) {
         cardStatus = true;
     }
 
+    function EditPlaylistName(event) {
+        if (event.detail==2){
+            handleToggleEdit(event)
+          }
+    }
+
     function handleAddNewSong() {
         store.addNewSong();
     }
@@ -128,45 +143,96 @@ function ListCard(props) {
     function handleClose() {
         store.closeCurrentList();
     }
-    //expandActive && store.currentList && (store.currentList._id == idNamePair._id
-    function setCurrentListHandlr() {
-        if (nullOrOpenPlaylist == true){
-            console.log("set playlist to null")
-            store.setCurrentList(null);
-        }else{
-            console.log("set actual playlist")
-            store.setCurrentList(idNamePair);
-        }
-        settingPlaylist(!nullOrOpenPlaylist)
-       // store.setCurrentList(idNamePair._id)
+
+    let shouldDrop = (store.currentList !== null) && (store.currentList._id == idNamePair._id)
+
+    function settingFunction(){
+        store.setCurrentList(idNamePair);
+    }
+    
+    function CreateDupPlaylist(){
+        store.createDupList(idNamePair);
     }
 
-    let cardElement =
-    <div>
-        <Accordion>
-        <AccordionSummary
-        expandIcon={<ExpandMoreIcon
-        onClick={(event) => {
-            setCurrentListHandlr()
-        }}
-        />}
+    function handlerClose(){
+        store.closeCurrentList();
+    }
 
-        aria-controls="panel1a-content"
-        id="panel1a-header"
-        >
+    function ClosesOtherOne(){
+        store.setCurrentPLaylis(idNamePair);
+    }
+
+    let expandedElement = ""
+    if(shouldDrop){
+    expandedElement = <>
+    <Box sx={{ flexDirection: 'column'}}>
+    <Box id ='song-cards-container' sx = {{overflowY:'auto', maxHeight: 250}}>
+      <List 
+          id="playlist-cards" 
+          sx={{ width: '100%', bgcolor: 'background.paper', height:'%5' }}
+      >
+          {
+              idNamePair.songs.map((song, index) => (
+                  <SongCard
+                      id={'playlist-song-' + (index)}
+                      key={'playlist-song-' + (index)}
+                      index={index}
+                      song={song}
+                  />
+              ))  
+          }
+      </List>
+   </Box>
+
+   {modalJSX}
+   <Box sx={{ flexDirection: 'row',  display: 'flex', gap:2, paddingTop:1}}>
+      <Button variant="contained"
+          disabled={!store.canAddNewSong()}
+          onClick={handleAddNewSong}
+      sx={{backgroundColor:"goldenrod"}} size="small">Add</Button>
+      <Button variant="contained" sx={{backgroundColor:"goldenrod"}} size="small"
+          id='add-song-button'
+          disabled={!store.canUndo()}
+          onClick={handleUndo}
+      >Undo</Button>
+      <Button variant="contained" sx={{backgroundColor:"goldenrod"}}  size="small"
+          disabled={!store.canRedo()}
+          onClick={handleRedo}
+      >Redo</Button>
+      <Button variant="contained" sx={{backgroundColor:"goldenrod"}}  size="small"
+      
+      >Delete</Button>
+      <Button variant="contained" sx={{backgroundColor:"goldenrod"}} size="small">Publish</Button>
+      <Button variant="contained" sx={{backgroundColor:"goldenrod"}} onClick={CreateDupPlaylist} size="small">Duplicate</Button>
+   </Box>
+
+   <Box sx={{ flexDirection: 'row', display: 'flex', gap:'30%', paddingTop:2}}>
+      <Typography>Published: Insert Data</Typography>
+      <Typography> Listens: Insert Number </Typography>
+   </Box>
+   </Box>
+   </>
+ }else{
+    expandedElement = <></>
+ }
+
+    let cardElement =
+
+    <Box className = {validOrNot ? classes.NonExpandedCss : classes.ExpandedCss} >
         <ListItem 
             id={idNamePair._id}
             key={idNamePair._id}
             sx={{ marginTop: '15px', display: 'flex', p: 1, bgcolor:'#F1E5AC'}}
             style={{ width: '100%', fontSize:'48pt'}}
             button
-            onClick={(event) => {
-                handleLoadList(event, idNamePair._id)
-            }}
-        >   
+            onDoubleClick={ClosesOtherOne}
+            >  
+        
             <Box sx={{ p: 1, flexGrow: 1 }}>
                 <Box sx={{fontSize:30}}>
-                {idNamePair.name}
+                    <div onClick={EditPlaylistName}>
+                        {idNamePair.name}
+                    </div>
                 </Box>
                 <Box sx = {{fontSize:20}}>
                     by {idNamePair.username}
@@ -190,57 +256,16 @@ function ListCard(props) {
                     <EditIcon style={{fontSize:'25pt'}} />
                 </IconButton>
             </Box>
+
+            <Box sx={{ p: 1 }}>
+                <IconButton 
+                 aria-label='upOrDown'>
+                    {!shouldDrop ? <KeyboardDoubleArrowDownIcon onClick={settingFunction} style={{fontSize:'25pt'}}> </KeyboardDoubleArrowDownIcon> : <KeyboardDoubleArrowUpIcon onClick={handlerClose} style={{fontSize:'25pt'}}> </KeyboardDoubleArrowUpIcon>}
+                </IconButton>
+            </Box>            
           </ListItem>
-          </AccordionSummary>
-          <AccordionDetails>
-          <Box id ='song-cards-container' sx = {{overflowY:'auto', maxHeight: 250}}>
-            <List 
-                id="playlist-cards" 
-                sx={{ width: '100%', bgcolor: 'background.paper', height:'%5' }}
-            >
-                {
-                    idNamePair.songs.map((song, index) => (
-                        <SongCard
-                            id={'playlist-song-' + (index)}
-                            key={'playlist-song-' + (index)}
-                            index={index}
-                            song={song}
-                        />
-                    ))  
-                }
-            </List>
-         </Box>
-         {modalJSX}
-         <Box sx={{ flexDirection: 'row',  display: 'flex', gap:2, paddingTop:1}}>
-            <Button variant="contained"
-                disabled={!store.canAddNewSong()}
-                onClick={handleAddNewSong}
-            sx={{backgroundColor:"goldenrod"}} size="small">Add</Button>
-            <Button variant="contained" sx={{backgroundColor:"goldenrod"}} size="small"
-                id='add-song-button'
-                disabled={!store.canUndo()}
-                onClick={handleUndo}
-            >Undo</Button>
-            <Button variant="contained" sx={{backgroundColor:"goldenrod"}}  size="small"
-                disabled={!store.canRedo()}
-                onClick={handleRedo}
-            >Redo</Button>
-            <Button variant="contained" sx={{backgroundColor:"goldenrod"}}  size="small"
-            
-            >Delete</Button>
-            <Button variant="contained" sx={{backgroundColor:"goldenrod"}} size="small">Publish</Button>
-            <Button variant="contained" sx={{backgroundColor:"goldenrod"}} size="small">Duplicate</Button>
-         </Box>
-
-         <Box sx={{ flexDirection: 'row', display: 'flex', gap:'30%', paddingTop:2}}>
-            <Typography>Published: Insert Data</Typography>
-            <Typography> Listens: Insert Number </Typography>
-         </Box>
-
-         </AccordionDetails>
-        </Accordion>
-    </div>
-
+          {expandedElement}
+    </Box>
 
     if (editActive) {
         cardElement =
