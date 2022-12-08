@@ -156,6 +156,10 @@ function ListCard(props) {
         store.createDupList(idNamePair);
     }
 
+    function publicfunc(){
+        store.currentList.publish.publishDate()
+    }
+    
     function handlerClose(){
         store.closeCurrentList();
     }
@@ -210,7 +214,7 @@ function ListCard(props) {
    </Box>
 
    <Box sx={{ flexDirection: 'row', display: 'flex', gap:'30%', paddingTop:2}}>
-      <Typography>Published: {store.currentList.publish.publishDate} </Typography>
+      <Typography>Published: {publicfunc} </Typography>
       <Typography> Listens: Insert Number </Typography>
    </Box>
    </Box>
@@ -247,7 +251,7 @@ function ListCard(props) {
    </Box>
 
    <Box sx={{ flexDirection: 'row', display: 'flex', gap:'30%', paddingTop:2}}>
-      <Typography>Published: {store.currentList.publish.publishDate} </Typography>
+      <Typography>Published: {publicfunc} </Typography>
       <Typography> Listens: Insert Number </Typography>
      </Box>
    </Box>
